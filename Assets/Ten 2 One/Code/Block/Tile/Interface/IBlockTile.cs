@@ -8,6 +8,8 @@ namespace Un1T3G.Ten2One
 
         Vector2Int Index { get; }
 
+        bool IsRock { get; }
+
         void DecreaseValue();
     }
 }

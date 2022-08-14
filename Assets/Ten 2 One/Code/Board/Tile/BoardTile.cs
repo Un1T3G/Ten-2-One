@@ -1,4 +1,5 @@
 using System;
+using Un1T3G.Pool;
 using UnityEngine;
 
 namespace Un1T3G.Ten2One
@@ -11,6 +12,12 @@ namespace Un1T3G.Ten2One
         public IBlockTile SelectedTile { get; private set; }
 
         public event Action<IBlockTile> OnSelectedTileChanged;
+        public event Action OnTilePlaced;
+
+        public void Setup()
+        {
+            base.Init();
+        }
 
         public void Place(IBlockTile tile)
         {
@@ -19,18 +26,25 @@ namespace Un1T3G.Ten2One
 
             tile.Root.SetParent(_transform);
             tile.Position = Vector2.zero;
+            tile.Scale = Vector2.one;
 
             _tilePlaced = true;
+
+            OnTilePlaced?.Invoke();
         }
 
         public void SetSelectedTile(IBlockTile tile)
         {
-            if (SelectedTile != null && tile != null)
-                if (tile.Root == SelectedTile.Root)
-                    return;
-
             SelectedTile = tile;
             OnSelectedTileChanged?.Invoke(tile);
+        }
+
+        public void Reset()
+        {
+            if (_tilePlaced)
+                PoolManager.Despawn(SelectedTile.Root.gameObject);
+
+            _tilePlaced = false;
         }
     }
 }

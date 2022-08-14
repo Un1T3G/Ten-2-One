@@ -12,14 +12,13 @@ namespace Un1T3G.Ten2One
 
         private RectTransform _transform;
 
-        private float _parentWidth => _transform.rect.width;
-        private float _parentHeight => _transform.rect.height;
-
+        public float Width => _transform.rect.width;
+        public float Height => _transform.rect.height;
         public float InsetSpacing => _insetSpacing;
         public float SpacingBetweenItem => _spacingBetweenItem;
         public Vector2 ChildSize => new Vector2(
-                (_parentWidth - (_columns - 1) * _spacingBetweenItem - _insetSpacing * 2) / _columns,
-                (_parentHeight - (_rows - 1) * _spacingBetweenItem - _insetSpacing * 2) / _rows
+                (Width - (_columns - 1) * _spacingBetweenItem - _insetSpacing * 2) / _columns,
+                (Height - (_rows - 1) * _spacingBetweenItem - _insetSpacing * 2) / _rows
                 );
 
         public void Init()
@@ -52,8 +51,8 @@ namespace Un1T3G.Ten2One
         public void Calculate()
         {
             Vector2 startPosition = new Vector2(
-                    -_parentWidth / 2 + ChildSize.x / 2 + _insetSpacing,
-                    _parentHeight / 2 - ChildSize.y / 2 - _insetSpacing
+                    -Width / 2 + ChildSize.x / 2 + _insetSpacing,
+                    Height / 2 - ChildSize.y / 2 - _insetSpacing
                     );
 
             for (int i = 0; i < _rows; i++)
@@ -76,7 +75,7 @@ namespace Un1T3G.Ten2One
         {
             var size = ChildSize + _spacingBetweenItem * Vector2.one;
 
-            position += new Vector2(_parentWidth, _parentHeight) / 2 - size / 2 - _insetSpacing * Vector2.one;
+            position += new Vector2(Width, Height) / 2 - size / 2 - _insetSpacing * Vector2.one;
 
             Vector2Int index = new Vector2Int(
                 Mathf.RoundToInt(position.x / size.x),

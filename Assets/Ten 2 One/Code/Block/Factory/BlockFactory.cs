@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using Un1T3G.Pool;
 
 namespace Un1T3G.Ten2One
 {
@@ -33,7 +34,8 @@ namespace Un1T3G.Ten2One
                 _board.GetTile(new Vector2Int(1, 0)).Position) - 
                 size.x;
 
-            var block = Instantiate(_blockPrefab, parent);
+            var block = PoolManager.Spawn(_blockPrefab, parent);
+            block.Init(_boardRoot, _canvasScaleFactor);
             block.Size = new Vector2(model.Columns, model.Rows) * 
                 size.x + spacingBetweenTile * 
                 new Vector2(model.Columns - 1, model.Rows - 1);
@@ -51,17 +53,18 @@ namespace Un1T3G.Ten2One
                     if (map[i, j] == false)
                         continue;
 
-                    var tile = Instantiate(_blockTilePrefab, block.transform);
+                    var tile = PoolManager.Spawn(_blockTilePrefab, block.transform);
+                    tile.Init();
 
                     tile.Position = position + new Vector2(j, i) * (size + spacingBetweenTile *  Vector2.one);
                     tile.Size = size;
 
-                    tile.Init(value, new Vector2Int(j, i));
+                    tile.Setup(value, new Vector2Int(j, i));
                     children.Add(tile);
                 }
             }
 
-            block.Init(children, _boardRoot, _canvasScaleFactor);
+            block.Setup(children);
 
             OnBuild?.Invoke(block);
 

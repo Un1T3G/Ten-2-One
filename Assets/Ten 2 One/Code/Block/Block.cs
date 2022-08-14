@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Un1T3G.Pool;
 
 namespace Un1T3G.Ten2One
 {
-    public class Block : DragableBehaviour, IBlock
+    public class Block : DragableBehaviour, IBlock, IPoolable
     {
         private Transform _parent;
         private Transform _boardRoot;
+        private Vector2 _beginPosition;
         private List<IBlockTile> _children;
-
         public IEnumerable<IBlockTile> Tiles => _children;
 
         public event Action<IBlock> OnPointerUpEvent;
@@ -18,9 +19,11 @@ namespace Un1T3G.Ten2One
 
         protected override void PointerDown()
         {
-            _transform.SetParent(_boardRoot);
-
             OnPointerDownEvent?.Invoke(this);
+
+            _beginPosition = Position;
+
+            _transform.SetParent(_boardRoot);
         }
 
         protected override void Draging()
@@ -30,17 +33,36 @@ namespace Un1T3G.Ten2One
 
         protected override void PointerUp()
         {
+            OnPointerUpEvent?.Invoke(this);
+
+            if (gameObject.activeInHierarchy == false)
+                return;
+
             _transform.SetParent(_parent);
 
-            OnPointerUpEvent?.Invoke(this);
+            Position = _beginPosition;
         }
 
-        public void Init(List<IBlockTile> children, Transform boardRoot,float scaleFactor)
+        public void Init(Transform boardRoot, float scaleFactor)
+        {
+            base.Init(scaleFactor);
+            _parent = _transform.parent;
+            _boardRoot = boardRoot;
+        }
+
+        public void Setup(List<IBlockTile> children)
         {
             _children = children;
-            _parent = _transform;
-            _boardRoot = boardRoot;
-            base.Init(scaleFactor);
+        }
+
+        public void OnSpawn()
+        {
+            
+        }
+
+        public void OnDespawn()
+        {
+            Scale = Vector2.one;
         }
     }
 }

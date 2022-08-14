@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using Un1T3G.Pool;
 
 namespace Un1T3G.Ten2One
 {
@@ -12,6 +13,8 @@ namespace Un1T3G.Ten2One
         public int Rows => _tiles.GetLength(0);
         public int Columns => _tiles.GetLength(1);
 
+        public event Action OnBuild;
+
         public void Build(int rows, int columns)
         {
             if (_tiles != null)
@@ -20,8 +23,16 @@ namespace Un1T3G.Ten2One
             _tiles = new BoardTile[rows, columns];
 
             for (int i = 0; i < rows; i++)
+            {
                 for (int j = 0; j < columns; j++)
-                    _tiles[i, j] = Instantiate(_boardTilePrefab, transform);
+                {
+                    var tile = PoolManager.Spawn(_boardTilePrefab, transform);
+                    tile.Init();
+                    _tiles[i, j] = tile;
+                }
+            }
+
+            OnBuild?.Invoke();
         }
 
         public BoardTile GetTile(Vector2Int index)
@@ -44,7 +55,7 @@ namespace Un1T3G.Ten2One
 
             for (int i = 0; i < Rows; i++)
                 for (int j = 0; j < Columns; j++)
-                    Destroy(_tiles[i, j].gameObject);
+                    PoolManager.Despawn(_tiles[i, j].gameObject);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Un1T3G.Ten2One
 
         private void OnEnable()
         {
-           // _board.OnBuild += OnBoardBuild;
+            _board.OnBuild += OnBoardBuild;
         }
 
         private void Awake()
@@ -24,7 +24,7 @@ namespace Un1T3G.Ten2One
 
         private void OnDisable()
         {
-            //_board.OnBuild -= OnBoardBuild;
+            _board.OnBuild -= OnBoardBuild;
         }
     }
 }

@@ -21,16 +21,29 @@ namespace Un1T3G.Ten2One
         private void OnEnable()
         {
             _tile.OnSelectedTileChanged += OnSelectedTileChanged;
+            _tile.OnTilePlaced += OnTilePlaced;
+        }
+
+        private void OnTilePlaced()
+        {
+            _image.color = _beginColor;
         }
 
         private void OnSelectedTileChanged(IBlockTile tile)
         {
+            if (_tile.TilePlaced)
+            {
+                _image.color = _beginColor;
+                return;
+            }
+
             _image.color = tile == null ? _beginColor : _highlightColor;
         }
 
         public void OnDisable()
         {
             _tile.OnSelectedTileChanged -= OnSelectedTileChanged;
+            _tile.OnTilePlaced -= OnTilePlaced;
         }
     }
 }

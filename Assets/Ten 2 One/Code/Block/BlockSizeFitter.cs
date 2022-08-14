@@ -15,27 +15,31 @@ namespace Un1T3G.Ten2One
 
         public bool CanFit(IBlock block)
         {
-            for (int i = 0; i < _board.Rows; i++)
+            bool CanOnPositon(int i, int j)
             {
-                for (int j = 0; j < _board.Columns; j++)
+                foreach(var tile in block.Tiles)
                 {
-                    foreach (var tile in block.Tiles)
-                    {
-                        var index = tile.Index + new Vector2Int(j, i);
-                        var isIndexInBound = _board.IndexInBound(index);
+                    var index = tile.Index + new Vector2Int(j, i);
+                    var isIndexInBound = _board.IndexInBound(index);
 
-                        if (isIndexInBound == false)
-                            break;
+                    if (isIndexInBound == false)
+                        return false;
 
-                        var boardTile = _board.GetTile(index);
+                    var boardTile = _board.GetTile(index);
 
-                        if (boardTile != null)
-                            return false;
-                    }
+                    if (boardTile.SelectedTile != null)
+                        return false;
                 }
+
+                return true;
             }
 
-            return true;
+            for (int i = 0; i < _board.Rows; i++)
+                for (int j = 0; j < _board.Columns; j++)
+                    if (CanOnPositon(i, j))
+                        return true;
+
+            return false;
         }
     }
 }
