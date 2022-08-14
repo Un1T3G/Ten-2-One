@@ -9,38 +9,16 @@ namespace Un1T3G.Ten2One
         private BlockFactory _blockFactory;
         private IBlockPlacer _blockPlacer;
         private IBoardTileMatcher _boardTileMatcher;
-        private IDataProvider<BlockModel[]> _blockDataProvider;
+        private IBlockDataProvider _blockDataProvider;
 
-        private readonly Stack<BlockModel> _buildedModels = new();
         private readonly List<IBlock> _spawnedBlocks = new();
-
-        private BlockModel GetRandomModel()
-        {
-            if (_buildedModels.Count > 3)
-                _buildedModels.Peek();
-
-            var data = _blockDataProvider.GetData();
-
-            BlockModel model = null;
-
-            while (model == null)
-            {
-                var randomModel = data[Random.Range(0, data.Length)];
-                /*
-                if (_buildedModels.Contains(randomModel) == false)
-                    model = randomModel;
-                */
-                model = randomModel;
-            }
-
-            _buildedModels.Push(model);
-
-            return model;
-        }
+        private readonly int _maxBlockCount = 3;
 
         private void Build()
         {
-            var block = _blockFactory.Build(GetRandomModel(), transform);
+            var data = _blockDataProvider.GetData();
+            var randomModel = data[Random.Range(0, data.Length)];
+            var block = _blockFactory.Build(randomModel, transform);
 
             _spawnedBlocks.Add(block);
         }
@@ -69,7 +47,7 @@ namespace Un1T3G.Ten2One
                 _boardTileMatcher.OnMatch -= OnMatch;
         }
 
-        public void Init(BlockFactory blockFactory, IBlockPlacer blockPlacer, IBoardTileMatcher boardTileMatcher, IDataProvider<BlockModel[]> blockDataProvider)
+        public void Init(BlockFactory blockFactory, IBlockPlacer blockPlacer, IBoardTileMatcher boardTileMatcher, IBlockDataProvider blockDataProvider)
         {
             _blockFactory = blockFactory;
             _blockPlacer = blockPlacer;
@@ -78,13 +56,11 @@ namespace Un1T3G.Ten2One
 
             _blockPlacer.OnPlace += OnBlockPlace;
             _boardTileMatcher.OnMatch += OnMatch;
-
-            BuildStartBlocks();
         }
 
         public void BuildStartBlocks()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < _maxBlockCount; i++)
                 Build();
         }
 

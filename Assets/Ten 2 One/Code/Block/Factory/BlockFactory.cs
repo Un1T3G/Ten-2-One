@@ -58,6 +58,7 @@ namespace Un1T3G.Ten2One
 
                     tile.Position = position + new Vector2(j, i) * (size + spacingBetweenTile *  Vector2.one);
                     tile.Size = size;
+                    tile.Scale = Vector2.one;
 
                     tile.Setup(value, new Vector2Int(j, i));
                     children.Add(tile);

@@ -29,6 +29,7 @@ namespace Un1T3G.Ten2One
         public void StartGame()
         {
             _board.Build(_rows, _columns);
+            _blockSpawner.BuildStartBlocks();
 
             OnStartGame?.Invoke();
         }

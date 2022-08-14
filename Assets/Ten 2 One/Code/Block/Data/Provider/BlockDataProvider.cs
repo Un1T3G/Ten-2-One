@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Un1T3G.Ten2One
 {
-    public class BlockDataProvider : MonoBehaviour, IDataProvider<BlockModel[]>
+    public class BlockDataProvider : MonoBehaviour, IBlockDataProvider
     {
-        private BlockModel[] _data =
+        private readonly BlockModel[] _data =
         {
             new BlockModel(new bool[1, 1] {{true}}),
             new BlockModel(new bool[2, 2] {{true, true}, {true, true}}),

@@ -15,6 +15,8 @@ namespace Un1T3G.Ten2One
         public event Action OnMatch;
         public event Action<IBlockTile> OnMatching;
 
+        private readonly int _destroyInterval = 100;
+
         private void OnDestroy()
         {
             if (_blockPlacer == null)
@@ -29,7 +31,7 @@ namespace Un1T3G.Ten2One
             {
                 foreach (var tile in matchList)
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(_destroyInterval);
 
                     OnMatching?.Invoke(tile.SelectedTile);
 
